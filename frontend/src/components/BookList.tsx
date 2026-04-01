@@ -7,7 +7,7 @@ import { saveCatalogReturnSearch } from '../lib/catalogReturnStorage'
 const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:5076'
 
 export type Book = {
-  bookId: number
+  bookID: number
   title: string
   author: string
   publisher: string
@@ -166,7 +166,7 @@ export function BookList() {
   function handleAddToCart(book: Book) {
     saveCatalogReturnSearch(location.search)
     addItem({
-      bookId: book.bookId,
+      bookID: book.bookID,
       title: book.title,
       price: book.price,
     })
@@ -327,7 +327,7 @@ export function BookList() {
                   </thead>
                   <tbody>
                     {data.books.map((b) => (
-                      <tr key={b.bookId}>
+                      <tr key={b.bookID}>
                         <td className="fw-medium">{b.title}</td>
                         <td>{b.author}</td>
                         <td className="text-muted small">{b.publisher}</td>

@@ -49,7 +49,7 @@ export function CartSummary({ compact = false }: Props) {
         <ul className={`list-group list-group-flush ${compact ? 'mb-2' : 'mb-3'}`}>
           {lines.slice(0, compact ? 5 : lines.length).map((l) => (
             <li
-              key={l.bookId}
+              key={l.bookID}
               className="list-group-item px-0 d-flex justify-content-between align-items-start gap-2 border-light-subtle"
             >
               <span className="small text-truncate" title={l.title}>

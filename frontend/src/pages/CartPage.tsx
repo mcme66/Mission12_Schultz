@@ -60,7 +60,7 @@ export function CartPage() {
                 </thead>
                 <tbody>
                   {lines.map((l) => (
-                    <tr key={l.bookId}>
+                    <tr key={l.bookID}>
                       <td className="fw-medium">{l.title}</td>
                       <td className="text-end font-monospace small">{money(l.price)}</td>
                       <td className="text-end">
@@ -72,7 +72,7 @@ export function CartPage() {
                           value={l.quantity}
                           onChange={(e) => {
                             const n = Number.parseInt(e.target.value, 10)
-                            if (Number.isFinite(n)) setQuantity(l.bookId, n)
+                            if (Number.isFinite(n)) setQuantity(l.bookID, n)
                           }}
                         />
                       </td>
@@ -83,7 +83,7 @@ export function CartPage() {
                         <button
                           type="button"
                           className="btn btn-sm btn-outline-danger"
-                          onClick={() => removeLine(l.bookId)}
+                          onClick={() => removeLine(l.bookID)}
                         >
                           Remove
                         </button>

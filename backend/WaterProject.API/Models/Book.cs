@@ -8,7 +8,7 @@ public class Book
 {
     [Key]
     [Column("BookID")]
-    public int BookId { get; set; }
+    public int BookID { get; set; }
 
     [Required]
     public string Title { get; set; } = string.Empty;

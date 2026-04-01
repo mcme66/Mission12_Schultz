@@ -12,7 +12,7 @@ import {
 const STORAGE_CART = 'booksmith_cart'
 
 export type CartLine = {
-  bookId: number
+  bookID: number
   title: string
   price: number
   quantity: number
@@ -35,14 +35,15 @@ function parseCart(raw: string | null): CartState {
     for (const row of lines) {
       if (!row || typeof row !== 'object') continue
       const r = row as Record<string, unknown>
-      const bookId = Number(r.bookId)
+      const rawId = r.bookID ?? r.bookId
+      const bookID = Number(rawId)
       const title = typeof r.title === 'string' ? r.title : ''
       const price = Number(r.price)
       const quantity = Math.floor(Number(r.quantity))
-      if (!Number.isFinite(bookId) || bookId < 1) continue
+      if (!Number.isFinite(bookID) || bookID < 1) continue
       if (!Number.isFinite(price) || price < 0) continue
       if (!Number.isFinite(quantity) || quantity < 1) continue
-      out.push({ bookId, title, price, quantity })
+      out.push({ bookID, title, price, quantity })
     }
     return { lines: out }
   } catch {
@@ -85,7 +86,7 @@ function setCartState(updater: (prev: CartState) => CartState) {
 }
 
 type BookLike = {
-  bookId: number
+  bookID: number
   title: string
   price: number
 }
@@ -96,8 +97,8 @@ type CartContextValue = {
   orderTotal: number
   lineSubtotal: (line: CartLine) => number
   addItem: (book: BookLike, quantity?: number) => void
-  setQuantity: (bookId: number, quantity: number) => void
-  removeLine: (bookId: number) => void
+  setQuantity: (bookID: number, quantity: number) => void
+  removeLine: (bookID: number) => void
 }
 
 const CartContext = createContext<CartContextValue | null>(null)
@@ -108,12 +109,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const addItem = useCallback((book: BookLike, quantity = 1) => {
     const q = Math.max(1, Math.floor(quantity))
     setCartState((prev) => {
-      const idx = prev.lines.findIndex((l) => l.bookId === book.bookId)
+      const idx = prev.lines.findIndex((l) => l.bookID === book.bookID)
       if (idx === -1) {
         return {
           lines: [
             ...prev.lines,
-            { bookId: book.bookId, title: book.title, price: book.price, quantity: q },
+            { bookID: book.bookID, title: book.title, price: book.price, quantity: q },
           ],
         }
       }
@@ -124,24 +125,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  const setQuantity = useCallback((bookId: number, quantity: number) => {
+  const setQuantity = useCallback((bookID: number, quantity: number) => {
     const q = Math.floor(quantity)
     if (q < 1) {
       setCartState((prev) => ({
-        lines: prev.lines.filter((l) => l.bookId !== bookId),
+        lines: prev.lines.filter((l) => l.bookID !== bookID),
       }))
       return
     }
     setCartState((prev) => ({
       lines: prev.lines.map((l) =>
-        l.bookId === bookId ? { ...l, quantity: q } : l,
+        l.bookID === bookID ? { ...l, quantity: q } : l,
       ),
     }))
   }, [])
 
-  const removeLine = useCallback((bookId: number) => {
+  const removeLine = useCallback((bookID: number) => {
     setCartState((prev) => ({
-      lines: prev.lines.filter((l) => l.bookId !== bookId),
+      lines: prev.lines.filter((l) => l.bookID !== bookID),
     }))
   }, [])
 
